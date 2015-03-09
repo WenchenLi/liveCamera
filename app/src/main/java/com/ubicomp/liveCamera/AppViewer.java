@@ -27,7 +27,7 @@ public class AppViewer extends FrameLayout {
     	Log.v(TAG, "AppViewer constructor 3");
 	    LayoutInflater.from(context).inflate(R.layout.start, this);
 	    mTextView =  (TextView) findViewById(R.id.hello_view);
-	    mTextView.setText("Smart\nCamera");
+	    mTextView.setText("Live\nCamera");
 
 	    mFooter =  (TextView) findViewById(R.id.footer);
 	    mFooter.setText("Enjoy");
