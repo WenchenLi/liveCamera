@@ -5,10 +5,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,16 +19,12 @@ import com.google.android.glass.touchpad.GestureDetector;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class ImageViewActivity extends Activity implements Runnable { 
 	public static final String TAG = "ImageViewActivity";
 	ImageView mImageview;
 	private GestureDetector mGestureDetector;
-	File mPictureFilePath;
 	String mPicturePath;
-
-	String mEmail;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,21 +63,11 @@ public class ImageViewActivity extends Activity implements Runnable {
 			return mGestureDetector.onMotionEvent(event);
 		}
 		return false;
-	}        
-	
-
-	Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			String text = (String)msg.obj;
-			Toast.makeText(ImageViewActivity.this, text, Toast.LENGTH_SHORT).show();            
-		}
-	};
+	}
 
 	public void run() {
 		Mail m = new Mail(Constant.em, Constant.constant);
-
-		Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+//		Pattern emailPattern = Patterns.EMAIL_ADDRESS;
 //		Account[] accounts = AccountManager.get(AppService.appService()).getAccounts();
 //		for (Account account : accounts) {
 //			if (emailPattern.matcher(account.name).matches()) {
@@ -92,7 +75,6 @@ public class ImageViewActivity extends Activity implements Runnable {
 //				Log.v(TAG, "mEmail:"+ mEmail);
 //			}
 //		}
-
 		String[] toArr = {Constant.frame};
 		m.setTo(toArr); 
 		m.setFrom(Constant.em);
@@ -101,15 +83,12 @@ public class ImageViewActivity extends Activity implements Runnable {
 		try { 
 			m.addAttachment(mPicturePath);
 
-			if(m.send()) { 
-				Message msg = new Message();
-				msg.obj = "Email sent successfully.";
-				mHandler.sendMessage(msg);
+			if(m.send()) {
+				Toast.makeText(ImageViewActivity.this, "sent", Toast.LENGTH_SHORT).show();
 				(new File(mPicturePath)).delete();
-			} else { 
-				Message msg = new Message();
-				msg.obj = "Email not sent.";
-				mHandler.sendMessage(msg); 
+			}
+			else {
+				Toast.makeText(ImageViewActivity.this, "failed", Toast.LENGTH_SHORT).show();
 			} 
 		} catch(Exception e) { 
 			Log.e("MailApp", "Could not send email", e); 
@@ -135,7 +114,7 @@ public class ImageViewActivity extends Activity implements Runnable {
 			thread.start();
 			return true;
 		case R.id.delete:
-			mPictureFilePath.delete();
+			(new File(mPicturePath)).delete();
 			Toast.makeText(ImageViewActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
 			finish();
 			return true;
