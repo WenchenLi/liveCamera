@@ -16,11 +16,10 @@ public class MenuActivity extends Activity {
         super.onCreate(savedInstanceState);
     }
     
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        openOptionsMenu();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onAttachedToWindow() {

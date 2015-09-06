@@ -1,20 +1,14 @@
 package com.ubicomp.liveCamera;
 
 
-import java.io.File;
-import java.util.regex.Pattern;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ShareCompat;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
@@ -26,6 +20,9 @@ import android.widget.Toast;
 
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
+
+import java.io.File;
+import java.util.regex.Pattern;
 
 public class ImageViewActivity extends Activity implements Runnable { 
 	public static final String TAG = "ImageViewActivity";
@@ -50,20 +47,17 @@ public class ImageViewActivity extends Activity implements Runnable {
 		int h = (int) ( myBitmap.getHeight() * (640.0 / myBitmap.getWidth()) );
 
 		Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, 640, h, true);
-		mImageview.setImageBitmap(scaled);        
+		mImageview.setImageBitmap(scaled);
 
 		mGestureDetector = new GestureDetector(this);
-
 		mGestureDetector.setBaseListener(new GestureDetector.BaseListener() {
 			@Override
 			public boolean onGesture(Gesture gesture) {
 				if (gesture == Gesture.TAP) {
 					Log.v(TAG, "TAP");
 					openOptionsMenu();
-
 					return true;
-				} 
-
+				}
 				return false;
 			}
 		});
@@ -77,7 +71,6 @@ public class ImageViewActivity extends Activity implements Runnable {
 	}        
 	
 
-
 	Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -87,10 +80,9 @@ public class ImageViewActivity extends Activity implements Runnable {
 	};
 
 	public void run() {
-//		Mail m = new Mail("<youraddress>@gmail.com", "<yourpassword>");
-		Mail m = new Mail("jeff.x.tang@gmail.com", "Daqi0530");
+		Mail m = new Mail("largemaths@gmail.com", "<yourpassword>");
 
-		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+		Pattern emailPattern = Patterns.EMAIL_ADDRESS;
 		Account[] accounts = AccountManager.get(AppService.appService()).getAccounts();
 		for (Account account : accounts) {
 			if (emailPattern.matcher(account.name).matches()) {
@@ -101,11 +93,8 @@ public class ImageViewActivity extends Activity implements Runnable {
 
 		String[] toArr = {mEmail}; 
 		m.setTo(toArr); 
-//		m.setFrom("<youraddress>@gmail.com"); 
-		m.setFrom("jeff.x.tang@gmail.com"); 
-		m.setSubject("Picture taken with Smart Camera"); 
-		m.setBody("To get the app for your Glass, go to https://github.com/xjefftang/smartcamera"); 
-
+		m.setFrom("largemaths@gmail.com");
+		m.setSubject("Picture taken with google glass");
 		try { 
 			m.addAttachment(mPictureFilePath.getAbsolutePath()); 
 
@@ -123,7 +112,6 @@ public class ImageViewActivity extends Activity implements Runnable {
 		} 
 	}
 
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -133,39 +121,20 @@ public class ImageViewActivity extends Activity implements Runnable {
 		return true;
 	} 
 
-
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {				
-		case R.id.upload:
-			Uri imgUri = Uri.parse("file://" + mPictureFilePath.getAbsolutePath());
-			Intent shareIntent = ShareCompat.IntentBuilder.from(this)
-					.setText("Share image taken by Glass")
-					.setType("image/jpeg")
-					.setStream(imgUri )
-					.getIntent()
-					.setPackage("com.google.android.apps.docs");
-
-			startActivity(shareIntent);			
-
-			return true;
-
+		switch (item.getItemId()) {
 		case R.id.email:
 			Toast.makeText(ImageViewActivity.this, "Sending email...", Toast.LENGTH_LONG).show();
 			// has to send network activity in the background, not the main thread, or app exception!	
 			Thread thread = new Thread(ImageViewActivity.this);
 			thread.start();
-
 			return true;
-
 		case R.id.delete:
 			mPictureFilePath.delete();
 			Toast.makeText(ImageViewActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
 			finish();
 			return true;
-
-
 		default:
 			return super.onOptionsItemSelected(item);
 		}

@@ -18,8 +18,6 @@
     <string name="upload">Upload to GDrive</string>
     <string name="email">Email to Self</string>
     <string name="delete">Delete from Glass</string>
-    
-    <string name="footer">Beginning Google Glass Development: Chapter 4</string>
-    
+
 </resources>    
     

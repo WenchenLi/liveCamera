@@ -2,32 +2,32 @@
 <items version="2" >
 
     <item
-        jar="/Users/Aaron/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
-        <dex dex="/Users/Aaron/AndroidStudioProjects/SmartCameraBasic/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-935d561e7ebe5683c91c9d88334b3276f384b805.jar" />
-    </item>
-    <item
-        jar="/Users/Aaron/AndroidStudioProjects/SmartCameraBasic/app/libs/activation.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="d1257cbff6faa44c1f325ae0d9413522d4644383">
-        <dex dex="/Users/Aaron/AndroidStudioProjects/SmartCameraBasic/app/build/intermediates/pre-dexed/debug/activation-5bfcba31f36c3bc5c7ec4d5069a2f09f571bb5df.jar" />
-    </item>
-    <item
-        jar="/Users/Aaron/AndroidStudioProjects/SmartCameraBasic/app/libs/mail.jar"
+        jar="/home/wenchen/StudioProjects/liveCamera/app/libs/mail.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="428e267abff0d10802ccde86b915da2c20471160">
-        <dex dex="/Users/Aaron/AndroidStudioProjects/SmartCameraBasic/app/build/intermediates/pre-dexed/debug/mail-5f114f12128d72facb046ead3f1760890abba50b.jar" />
+        <dex dex="/home/wenchen/StudioProjects/liveCamera/app/build/intermediates/pre-dexed/debug/mail-843be654ecc0db8e77aad9928ce52afd1cc526a6.jar" />
     </item>
     <item
-        jar="/Users/Aaron/AndroidStudioProjects/SmartCameraBasic/app/libs/additionnal.jar"
+        jar="/home/wenchen/StudioProjects/liveCamera/app/libs/additionnal.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="bd9e8dc422bb8c8405359947fe9f4282b49f57f4">
-        <dex dex="/Users/Aaron/AndroidStudioProjects/SmartCameraBasic/app/build/intermediates/pre-dexed/debug/additionnal-67bb06f6b9612f1c2cae32f052da7adb4f08ff43.jar" />
+        <dex dex="/home/wenchen/StudioProjects/liveCamera/app/build/intermediates/pre-dexed/debug/additionnal-449f8dbd46cc0a865fd5554dc6a5eeda8bf68382.jar" />
+    </item>
+    <item
+        jar="/home/wenchen/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/home/wenchen/StudioProjects/liveCamera/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-90d0cc365d05a86f39a594f93100076226232852.jar" />
+    </item>
+    <item
+        jar="/home/wenchen/StudioProjects/liveCamera/app/libs/activation.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d1257cbff6faa44c1f325ae0d9413522d4644383">
+        <dex dex="/home/wenchen/StudioProjects/liveCamera/app/build/intermediates/pre-dexed/debug/activation-cb5a83802e316eaef44950ec1ed18e0a9956aa51.jar" />
     </item>
 
 </items>

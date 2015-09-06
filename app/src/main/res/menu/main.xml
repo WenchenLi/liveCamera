@@ -14,7 +14,6 @@
         android:id="@+id/photo"
         android:icon="@drawable/ic_world_50"
         android:title="@string/photo"/>
-    
 
     <item
         android:id="@+id/stop"
