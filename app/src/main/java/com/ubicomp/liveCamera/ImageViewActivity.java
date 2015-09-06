@@ -7,14 +7,16 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
+import com.google.android.glass.view.WindowUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,12 +27,16 @@ public class ImageViewActivity extends Activity implements Runnable {
 	ImageView mImageview;
 	private GestureDetector mGestureDetector;
 	String mPicturePath;
+	private boolean mVoiceMenuEnabled;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
 		setContentView(R.layout.imageview);
+
 		File mPictureFilePath = new File("storage/emulated/0/DCIM/Camera");
 		List<String> paths = new ArrayList<String>();
 		File[] files = mPictureFilePath.listFiles();
@@ -97,30 +103,76 @@ public class ImageViewActivity extends Activity implements Runnable {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.imageview, menu);
-
+		getMenuInflater().inflate(R.menu.imageview, menu);
 		return true;
-	} 
+	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.email:
-			Toast.makeText(ImageViewActivity.this, "Sending email...", Toast.LENGTH_LONG).show();
-			// has to send network activity in the background, not the main thread, or app exception!	
-			Thread thread = new Thread(ImageViewActivity.this);
-			thread.start();
+	public boolean onCreatePanelMenu(int featureId, Menu menu) {
+		if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS||
+				featureId == Window.FEATURE_OPTIONS_PANEL) {
+			getMenuInflater().inflate(R.menu.imageview, menu);
+			if(mVoiceMenuEnabled){
+				Log.v(TAG,"VoiceEnabled");
+				menu.add("hello");
+			}
 			return true;
-		case R.id.delete:
-			(new File(mPicturePath)).delete();
-			Toast.makeText(ImageViewActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-			finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
 		}
-	}    	      
+		// Pass through to super to setup touch menu.
+		return super.onCreatePanelMenu(featureId, menu);
+	}
 
+
+
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//			case R.id.email:
+//				Toast.makeText(ImageViewActivity.this, "Sending email...", Toast.LENGTH_LONG).show();
+//				// has to send network activity in the background, not the main thread, or app exception!
+//				Thread thread = new Thread(ImageViewActivity.this);
+//				thread.start();
+//				return true;
+//			case R.id.delete:
+//				(new File(mPicturePath)).delete();
+//				Toast.makeText(ImageViewActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+//				finish();
+//				return true;
+//			default:
+//				return super.onOptionsItemSelected(item);
+//		}
+//	}
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS ||
+				featureId == Window.FEATURE_OPTIONS_PANEL) {
+			switch (item.getItemId()) {
+				case R.id.email:
+					Toast.makeText(ImageViewActivity.this, "Sending email...", Toast.LENGTH_LONG).show();
+					// has to send network activity in the background, not the main thread, or app exception!
+					Thread thread = new Thread(ImageViewActivity.this);
+					thread.start();
+					return true;
+				case R.id.delete:
+					(new File(mPicturePath)).delete();
+					Toast.makeText(ImageViewActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+					finish();
+					return true;
+				default:
+					return super.onOptionsItemSelected(item);
+			}
+		}
+		// Good practice to pass through to super if not handled
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	@Override
+	public boolean onPreparePanel(int featureId, View view, Menu menu) {
+		if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS) {
+			// toggle this boolean on and off based on some criteria
+			return mVoiceMenuEnabled;
+		}
+		// Good practice to call through to super for other cases
+		return super.onPreparePanel(featureId, view, menu);
+	}
 }

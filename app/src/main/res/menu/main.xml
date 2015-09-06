@@ -4,14 +4,6 @@
         android:id="@+id/Share"
         android:icon="@drawable/ic_world_50"
         android:title="@string/Share"/>
-    <item
-        android:id="@+id/preview"
-        android:icon="@drawable/ic_world_50"
-        android:title="@string/preview"/>
-    <item
-        android:id="@+id/zoom"
-        android:icon="@drawable/ic_world_50"
-        android:title="@string/zoom"/>
 
     <item
         android:id="@+id/photo"
