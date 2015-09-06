@@ -38,16 +38,19 @@ public class MenuActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.preview:
-            	Intent intent = new Intent(this, PreviewActivity.class);
-                startActivity(intent);  
-                return true;
+//            case R.id.preview:
+//            	Intent intent = new Intent(this, PreviewActivity.class);
+//                startActivity(intent);
+//                return true;
            
-            case R.id.zoom:
-            	Intent intent2 = new Intent(this, ZoomActivity.class);
-                startActivity(intent2);            	
+//            case R.id.zoom:
+//            	Intent intent2 = new Intent(this, ZoomActivity.class);
+//                startActivity(intent2);
+//                return true;
+            case R.id.Share:
+                Intent shareIntent = new Intent(this, ImageViewActivity.class);
+                startActivity(shareIntent);
                 return true;
-
 
             case R.id.photo:
                 Toast.makeText(MenuActivity.this, "Loading photos...", Toast.LENGTH_LONG).show();

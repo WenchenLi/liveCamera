@@ -1,13 +1,5 @@
 package com.ubicomp.liveCamera;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,6 +20,14 @@ import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 public class PhotoViewActivity extends Activity
 {
 	public static final String TAG = "PhotoViewActivity";
@@ -37,7 +37,7 @@ public class PhotoViewActivity extends Activity
 	private GestureDetector mGestureDetector;
 
 
-	ArrayList<FilenameDir> mPicInfo = new ArrayList<FilenameDir>();    
+	ArrayList<FilenameDir> mPicInfo = new ArrayList<FilenameDir>();
 	final private String mAppPicDir = Environment.getExternalStorageDirectory()+"/"+Environment.DIRECTORY_PICTURES + "/SmartCamera";
 	final private String mPicDir = Environment.getExternalStorageDirectory()+"/"+Environment.DIRECTORY_DCIM + "/Camera";
 
@@ -49,8 +49,8 @@ public class PhotoViewActivity extends Activity
 			if (! new File(mAppPicDir).mkdirs()){
 				Log.d(TAG, "failed to create directory: " + mAppPicDir);
 			}
-		}		
-		
+		}
+
 		createCards();
 
 		mCardScrollView = new CardScrollView(this);
@@ -63,7 +63,7 @@ public class PhotoViewActivity extends Activity
 
 		mGestureDetector = new GestureDetector(this);
 
-		// Called when the following gestures happen: TAP, LONG_PRESS SWIPE_UP, 
+		// Called when the following gestures happen: TAP, LONG_PRESS SWIPE_UP,
 		// SWIPE_LEFT, SWIPE_RIGHT, SWIPE_DOWN
 		mGestureDetector.setBaseListener(new GestureDetector.BaseListener() {
 			@Override
@@ -85,7 +85,7 @@ public class PhotoViewActivity extends Activity
 			return mGestureDetector.onMotionEvent(event);
 		}
 		return false;
-	}        
+	}
 
 
 
@@ -96,28 +96,23 @@ public class PhotoViewActivity extends Activity
 		inflater.inflate(R.menu.imageview, menu);
 
 		return true;
-	} 
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.upload:
-			Toast.makeText(PhotoViewActivity.this, "upload", Toast.LENGTH_SHORT).show();
-
-			return true;
-
 		case R.id.email:
 			Toast.makeText(PhotoViewActivity.this, "email", Toast.LENGTH_SHORT).show();
 			return true;
 
 		case R.id.delete:
 			Toast.makeText(PhotoViewActivity.this, "delete", Toast.LENGTH_SHORT).show();
-			return true;			
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}    	      
+	}
 
 
 	private void createCards() {
@@ -128,7 +123,7 @@ public class PhotoViewActivity extends Activity
 		Log.v(TAG, "mPicInfo size:"+mPicInfo.size());
 
 		Log.v(TAG,  "mAppPicDir="+mAppPicDir);
-		
+
 		// TODO: test performance improvement - show only 3 cards, when moving to next or previous card, update the cards in cardscrollview
 		for (FilenameDir fDir : mPicInfo) {
 			Log.v(TAG, fDir.mFilename + ", " + fDir.mDirname);
@@ -138,12 +133,12 @@ public class PhotoViewActivity extends Activity
 			Log.v(TAG, "addImage: "+ fDir.mDirname + "/" + fDir.mFilename);
 			card.setImageLayout(Card.ImageLayout.FULL);
 
-			//card.addImage(Uri.fromFile(new File(fDir.mDirname + "/" + fDir.mFilename)));            
+			//card.addImage(Uri.fromFile(new File(fDir.mDirname + "/" + fDir.mFilename)));
 			// without scale down, you get "Bitmap too large to be uploaded into a texture" error
 			Bitmap myBitmap = BitmapFactory.decodeFile(fDir.mDirname + "/" + fDir.mFilename);
 			Log.v(TAG, "myBitmap:"+myBitmap.getHeight()+","+myBitmap.getWidth());
 			int h = (int) ( myBitmap.getHeight() * (640.0 / myBitmap.getWidth()) );
-			Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, 640, h, true);            
+			Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, 640, h, true);
 
 			try {
 				File file = new File(mAppPicDir + "/scaled-" + fDir.mFilename);
@@ -155,9 +150,9 @@ public class PhotoViewActivity extends Activity
 				Log.v(TAG, ">>>" + e.getMessage());
 			}
 
-			card.addImage(BitmapFactory.decodeFile(mAppPicDir + "/scaled-" + fDir.mFilename));            
+			card.addImage(BitmapFactory.decodeFile(mAppPicDir + "/scaled-" + fDir.mFilename));
 
-			mCards.add(card.getView());        	
+			mCards.add(card.getView());
 		}
 
 
@@ -188,7 +183,7 @@ public class PhotoViewActivity extends Activity
 		public View getView(int position, View convertView, ViewGroup parent) {
 			return mCards.get(position);//.toView();
 		}
-	}	
+	}
 
 
 
@@ -210,7 +205,7 @@ public class PhotoViewActivity extends Activity
 				if (file.getName().indexOf(".jpg") == -1) {
 					Log.v(TAG, "non jpg file found, continue loop");
 					continue;
-				}        		
+				}
 
 				Log.v(TAG, ">>> " + file.getAbsolutePath() + " is a file");
 				if (count++ == 10) break; // 20 still ok. 50 out of memory
@@ -234,10 +229,10 @@ public class PhotoViewActivity extends Activity
 				Log.e(TAG, "Was unable to copy " + fromFilepath +  e.toString());
 				return;
 			}
-		}   
+		}
 		try {
 			InputStream in = new FileInputStream(fromFilepath);
-			OutputStream out = new FileOutputStream(toDir + "/" + new File(fromFilepath).getName());		 
+			OutputStream out = new FileOutputStream(toDir + "/" + new File(fromFilepath).getName());
 
 			// Transfer bytes from in to out
 			byte[] buf = new byte[1024];
@@ -248,7 +243,7 @@ public class PhotoViewActivity extends Activity
 			in.close();
 			out.close();
 
-			Log.v(TAG, "Copied " + fromFilepath + " to " + toDir + "/" + new File(fromFilepath).getName());		
+			Log.v(TAG, "Copied " + fromFilepath + " to " + toDir + "/" + new File(fromFilepath).getName());
 		}
 		catch (Exception e) {
 			Log.e(TAG, "Was unable to copy " + fromFilepath +  e.toString());

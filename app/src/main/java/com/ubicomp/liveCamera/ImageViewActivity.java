@@ -1,8 +1,6 @@
 package com.ubicomp.liveCamera;
 
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,6 +20,8 @@ import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class ImageViewActivity extends Activity implements Runnable { 
@@ -29,6 +29,8 @@ public class ImageViewActivity extends Activity implements Runnable {
 	ImageView mImageview;
 	private GestureDetector mGestureDetector;
 	File mPictureFilePath;
+	String mPicturePath;
+
 	String mEmail;
 
 	@Override
@@ -36,17 +38,17 @@ public class ImageViewActivity extends Activity implements Runnable {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.imageview);
-		Bundle extras = getIntent().getExtras();
-		mPictureFilePath = (File)extras.get("picturefilepath");
-
-		Log.v(TAG, "pictureFilePath=" + mPictureFilePath.getAbsolutePath());
+		File mPictureFilePath = new File("storage/emulated/0/DCIM/Camera");
+		List<String> paths = new ArrayList<String>();
+		File[] files = mPictureFilePath.listFiles();
+		for (int i = 0; i < files.length; ++i) {
+			paths.add(files[i].getAbsolutePath());
+			Log.v(TAG, String.valueOf(paths.size()));
+		}
+		Bitmap myBitmap = BitmapFactory.decodeFile(paths.get(0));
+		mPicturePath = paths.get(0);
+		Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, 640, 360, true);
 		mImageview =  (ImageView) findViewById(R.id.picture);
-
-		// need to scale down the image to avoid the error of loading a bitmap too big
-		Bitmap myBitmap = BitmapFactory.decodeFile(mPictureFilePath.getAbsolutePath());
-		int h = (int) ( myBitmap.getHeight() * (640.0 / myBitmap.getWidth()) );
-
-		Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, 640, h, true);
 		mImageview.setImageBitmap(scaled);
 
 		mGestureDetector = new GestureDetector(this);
@@ -80,28 +82,30 @@ public class ImageViewActivity extends Activity implements Runnable {
 	};
 
 	public void run() {
-		Mail m = new Mail("largemaths@gmail.com", "<yourpassword>");
+		Mail m = new Mail(Constant.em, Constant.constant);
 
 		Pattern emailPattern = Patterns.EMAIL_ADDRESS;
-		Account[] accounts = AccountManager.get(AppService.appService()).getAccounts();
-		for (Account account : accounts) {
-			if (emailPattern.matcher(account.name).matches()) {
-				mEmail = account.name;
-				Log.v(TAG, "mEmail:"+ mEmail);
-			}
-		}		
+//		Account[] accounts = AccountManager.get(AppService.appService()).getAccounts();
+//		for (Account account : accounts) {
+//			if (emailPattern.matcher(account.name).matches()) {
+//				mEmail = account.name;
+//				Log.v(TAG, "mEmail:"+ mEmail);
+//			}
+//		}
 
-		String[] toArr = {mEmail}; 
+		String[] toArr = {Constant.frame};
 		m.setTo(toArr); 
-		m.setFrom("largemaths@gmail.com");
+		m.setFrom(Constant.em);
 		m.setSubject("Picture taken with google glass");
+		m.setBody("to grandma frame");
 		try { 
-			m.addAttachment(mPictureFilePath.getAbsolutePath()); 
+			m.addAttachment(mPicturePath);
 
 			if(m.send()) { 
 				Message msg = new Message();
 				msg.obj = "Email sent successfully.";
-				mHandler.sendMessage(msg); 
+				mHandler.sendMessage(msg);
+				(new File(mPicturePath)).delete();
 			} else { 
 				Message msg = new Message();
 				msg.obj = "Email not sent.";
