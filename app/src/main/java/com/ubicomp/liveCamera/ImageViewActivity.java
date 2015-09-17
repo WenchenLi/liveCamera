@@ -18,7 +18,10 @@ import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.view.WindowUtils;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +44,12 @@ public class ImageViewActivity extends Activity implements Runnable {
 		List<String> paths = new ArrayList<String>();
 		File[] files = mPictureFilePath.listFiles();
 		for (int i = 0; i < files.length; ++i) {
-			paths.add(files[i].getAbsolutePath());
+			try {
+				if(isJPEG(files[i]))
+                paths.add(files[i].getAbsolutePath());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			Log.v(TAG, String.valueOf(paths.size()));
 		}
 		Bitmap myBitmap = BitmapFactory.decodeFile(paths.get(0));
@@ -63,7 +71,19 @@ public class ImageViewActivity extends Activity implements Runnable {
 			}
 		});
 	}
+	private static Boolean isJPEG(File filename) throws Exception {
+		DataInputStream ins = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)));
+		try {
+			if (ins.readInt() == 0xffd8ffe0) {
+				return true;
+			} else {
+				return false;
 
+			}
+		} finally {
+			ins.close();
+		}
+	}
 	public boolean onGenericMotionEvent(MotionEvent event) {
 		if (mGestureDetector != null) {
 			return mGestureDetector.onMotionEvent(event);
